@@ -107,3 +107,7 @@ export function todoReducer( state = estadoInicial, action: fromTodo.Acciones ):
 # Información general
 
 Para saber en que ruta estoy, en la consola tipeo: pwd
+
+# Aplicación desplegada online:
+
+https://blackweaver.github.io/filter-redux-app/
