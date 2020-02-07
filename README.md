@@ -1,27 +1,109 @@
-# Todoapp
+# Abrir proyecto en VS Code desde la terminal
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.0.
+```
+code -n ./todoapp
+```
 
-## Development server
+# Instalando el CSS del proyecto
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+```
+npm install todomvc-app-css --save
+```
 
-## Code scaffolding
+# Instalando y configurando el store
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```
+npm install @ngrx/store --save
+```
 
-## Build
+## Importo y configuro el store en el app.module.ts
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+```
+import { StoreModule } from '@ngrx/store';
 
-## Running unit tests
+StoreModule.forRoot({ todos: todoReducer }),
+```
+# Instalando las herramientas del Store
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+```
+npm install @ngrx/store-devtools --save
+```
 
-## Running end-to-end tests
+## Importo y configuro el StoreDevetools en el app.module.ts
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+```
+import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 
-## Further help
+StoreDevtoolsModule.instrument({
+    maxAge: 5,
+    logOnly: environment.production,
+})
+```
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+# Creo un modelo para el state ./model
+
+```
+export class Todo {
+    public id: number;
+    public texto: string;
+    public completado: boolean;
+
+    constructor( texto: string ) {
+        this.texto = texto.charAt(0).toUpperCase() + texto.slice(1);
+        this.completado = false;
+
+        this.id = Math.random();
+
+    }
+}
+```
+
+# Creo una interface para el modelo
+
+```
+import { Todo } from './todo/model/todo.model';
+
+export interface AppState {
+    todos: Todo[];
+}
+```
+
+# Creo las acciones name.actions.ts
+
+```
+import { Action } from '@ngrx/store';
+
+export const AGREGAR_TODO = '[TODO] Agregar todo';
+
+export class AgregarTodoAciton implements Action {
+    readonly type = AGREGAR_TODO;
+
+    constructor( public texto: string ) {}
+}
+
+export type Acciones = AgregarTodoAciton;
+
+```
+
+# Creo los reducers name.reducer.ts
+
+```
+import * as fromTodo from './todo.actions';
+import { Todo } from './model/todo.model';
+
+const estadoInicial: Todo[] = [];
+
+export function todoReducer( state = estadoInicial, action: fromTodo.Acciones ): Todo[] {
+    switch (action.type) {
+        case fromTodo.AGREGAR_TODO:
+            const todo = new Todo( action.texto );
+            return [ ...state, todo ];
+        default:
+            return state;
+    }
+}
+```
+
+# Información general
+
+Para saber en que ruta estoy, en la consola tipeo: pwd
